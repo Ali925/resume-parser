@@ -1,5 +1,5 @@
 {
-  "name": "resume-parser",
+  "name": "resume-parser-object",
   "version": "1.1.0",
   "description": "A Simple NodeJs library to parse Resume / CV to JSON.",
   "main": "src/index.js",
