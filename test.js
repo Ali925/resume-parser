@@ -11,7 +11,7 @@ ResumeParser
     console.error(error);
   });
 
-// ResumeParser.parseResumeUrl('http://www.mysite.com/resume.txt') // url
+// ResumeParser.parseResumeUrl('https://github.com/likerRr/code4goal-resume-parser/blob/ce/public/ErnaniJoppert%20P%20Martins.pdf') // url
 //   .then(data => {
 //     console.log('Yay! ', data);
 //   })

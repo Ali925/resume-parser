@@ -18,6 +18,9 @@ function makeRegExpFromDictionary() {
     titles: {},
     profiles: [],
     inline: {},
+    skills: {
+      techReg: []
+    }
   };
 
   _.forEach(dictionary.titles, function(titles, key) {
@@ -50,9 +53,26 @@ function makeRegExpFromDictionary() {
     }
   });
 
-  _.forEach(dictionary.inline, function(expr, name) {
-    regularRules.inline[name] = expr + ':?[\\s]*(.*)';
+  _.forEach(dictionary.inline, function(inlines, key) {
+    regularRules.inline[key] = [];
+    _.forEach(inlines, function(inline) {
+      regularRules.inline[key].push(inline + ':');
+    });
   });
+
+  _.forEach(dictionary.inline, function(inlines, key) {
+    regularRules.inline[key] = [];
+    _.forEach(inlines, function(inline) {
+      regularRules.inline[key].push(inline + ':?[\\s]*(.*)');
+    });
+  });
+
+  _.forEach(dictionary.skills.tech, function(skill, key) {
+    regularRules.skills.techReg.push('\W*('+skill+')\W*');
+  });
+  // _.forEach(dictionary.inline, function(expr, name) {
+  //   regularRules.inline[name] = expr + ':?[\\s]*(.*)';
+  // });
 
   return _.extend(dictionary, regularRules);
 }
@@ -65,7 +85,7 @@ function parse(PreparedFile, cbReturnResume) {
     Resume = new resume(),
     rows = rawFileData.split('\n'),
     row;
-
+    console.log("prepared file: ", PreparedFile, rawFileData);
   // save prepared file text (for debug)
   //fs.writeFileSync('./parsed/'+PreparedFile.name + '.txt', rawFileData);
 
@@ -80,6 +100,7 @@ function parse(PreparedFile, cbReturnResume) {
     // 3 parse titles
     parseDictionaryTitles(Resume, rows, i);
     parseDictionaryInline(Resume, row);
+    parseDictionarySkills(Resume, row);
   }
 
   if (_.isFunction(cbReturnResume)) {
@@ -136,11 +157,31 @@ function countWords(str) {
 function parseDictionaryInline(Resume, row) {
   var find;
 
-  _.forEach(dictionary.inline, function(expression, key) {
-    find = new RegExp(expression).exec(row);
-    if (find) {
-      Resume.addKey(key.toLowerCase(), find[1]);
-    }
+  _.forEach(dictionary.inline, function(expressions, key) {
+    _.forEach(expressions, function(expression){
+      //console.log("expression: ", expression, key);
+      find = new RegExp(expression).exec(row);
+
+      if (find) {
+        console.log("find: ", find, find[1], expression, key);
+        Resume.addKey(key.toLowerCase(), find[1]);
+      }
+    });
+    
+  });
+}
+
+function parseDictionarySkills(Resume, row) {
+  var find;
+
+  _.forEach(dictionary.skills.techReg, function(expression, key) {
+      find = new RegExp(expression, "i").exec(row);
+
+      if (find) {
+        console.log("find skill", find, expression, key);
+        Resume.addKey('skill_' + key.toString().toLowerCase(), find[1]);
+      }
+    
   });
 }
 
