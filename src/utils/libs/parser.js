@@ -17,10 +17,7 @@ function makeRegExpFromDictionary() {
   var regularRules = {
     titles: {},
     profiles: [],
-    inline: {},
-    skills: {
-      techReg: []
-    }
+    inline: {}
   };
 
   _.forEach(dictionary.titles, function(titles, key) {
@@ -66,10 +63,6 @@ function makeRegExpFromDictionary() {
       regularRules.inline[key].push(inline + ':?[\\s]*(.*)');
     });
   });
-
-  _.forEach(dictionary.skills.tech, function(skill, key) {
-    regularRules.skills.techReg.push('\W*('+skill+')\W*');
-  });
   // _.forEach(dictionary.inline, function(expr, name) {
   //   regularRules.inline[name] = expr + ':?[\\s]*(.*)';
   // });
@@ -100,7 +93,6 @@ function parse(PreparedFile, cbReturnResume) {
     // 3 parse titles
     parseDictionaryTitles(Resume, rows, i);
     parseDictionaryInline(Resume, row);
-    parseDictionarySkills(Resume, row);
   }
 
   if (_.isFunction(cbReturnResume)) {
@@ -167,20 +159,6 @@ function parseDictionaryInline(Resume, row) {
         Resume.addKey(key.toLowerCase(), find[1]);
       }
     });
-    
-  });
-}
-
-function parseDictionarySkills(Resume, row) {
-  var find;
-
-  _.forEach(dictionary.skills.techReg, function(expression, key) {
-      find = new RegExp(expression, "i").exec(row);
-
-      if (find) {
-        console.log("find skill", find, expression, key);
-        Resume.addKey('skill_' + key.toString().toLowerCase(), find[1]);
-      }
     
   });
 }
