@@ -2,7 +2,7 @@ const ResumeParser = require('./src');
 
 const fileDir = process.cwd() + '/files/';
 ResumeParser
-  .parseResumeFile(fileDir + 'Data_scientist.pdf', fileDir + 'compiled') //input file, output dir
+  .parseResumeFile(fileDir + 'socials.pdf', fileDir + 'compiled') //input file, output dir
   .then(file => {
     console.log("Yay! " + file);
   })

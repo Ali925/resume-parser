@@ -174,7 +174,9 @@ function parseDictionaryRegular(data, Resume) {
 
   _.forEach(regularDictionary, function(expressions, key) {
     _.forEach(expressions, function(expression) {
+      console.log("expression: ", expression);
       find = new RegExp(expression).exec(data);
+      console.log("find: ", find);
       if (find) {
         Resume.addKey(key.toLowerCase(), find[0]);
       }
@@ -242,10 +244,10 @@ function parseDictionaryProfiles(row, Resume) {
       }
       expression = expression[0];
     }
-    console.log("profile experssion: ", expression, expressionHandler);
+    //console.log("profile experssion: ", expression, expressionHandler);
     find = new RegExp(expression).exec(row);
     if (find) {
-      Resume.addKey('profiles', find[0] + '\n');
+      Resume.addKey('profiles', find[0] + ',');
       modifiedRow = row.replace(find[0], '');
       if (_.isFunction(expressionHandler)) {
         profilesWatcher.inProgress++;
