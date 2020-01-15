@@ -242,6 +242,7 @@ function parseDictionaryProfiles(row, Resume) {
       }
       expression = expression[0];
     }
+    console.log("profile experssion: ", expression, expressionHandler);
     find = new RegExp(expression).exec(row);
     if (find) {
       Resume.addKey('profiles', find[0] + '\n');
