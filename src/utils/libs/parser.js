@@ -78,7 +78,7 @@ function parse(PreparedFile, cbReturnResume) {
     Resume = new resume(),
     rows = rawFileData.split('\n'),
     row;
-    console.log("prepared file: ", PreparedFile, rawFileData);
+    //console.log("prepared file: ", PreparedFile, rawFileData);
   // save prepared file text (for debug)
   //fs.writeFileSync('./parsed/'+PreparedFile.name + '.txt', rawFileData);
 
@@ -155,7 +155,7 @@ function parseDictionaryInline(Resume, row) {
       find = new RegExp(expression).exec(row);
 
       if (find) {
-        console.log("find: ", find, find[1], expression, key);
+        //console.log("find: ", find, find[1], expression, key);
         Resume.addKey(key.toLowerCase(), find[1]);
       }
     });
@@ -169,19 +169,50 @@ function parseDictionaryInline(Resume, row) {
  * @param Resume
  */
 function parseDictionaryRegular(data, Resume) {
+  //console.log("data: ", data);
+  let d = data.split("\n");
+  console.log("data: ", data);
+  for(let i=0;i<d.length;i++){
+    d[i] = d[i].trim();
+  }
+  data = d.join("\n");
   var regularDictionary = dictionary.regular,
     find;
 
   _.forEach(regularDictionary, function(expressions, key) {
     _.forEach(expressions, function(expression) {
-      console.log("expression: ", expression);
+      //console.log("expression: ", expression);
       find = new RegExp(expression).exec(data);
-      console.log("find: ", find);
-      if (find) {
+      //console.log("find: ", find);
+      if (find && find.length && !find[0].includes("CURRICULUM")) {
         Resume.addKey(key.toLowerCase(), find[0]);
       }
     });
   });
+
+  if(!Resume.parts.name){
+    let regexName = new RegExp(/(?=^|$|[^\\p{L}])(^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}$|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}$|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[a-zàáâäãåąčćęèéêëėəįìíîïłńòóôöõøùúûüųūÿýżźñçčšžа-яё]{1,30}[\s]|^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[ \n]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1}[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]{1,30}[\s]){1}/);
+    let firstname, lastname, regex = new RegExp(/^[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËƏİÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽА-ЯЁ]/);
+    for(let index = 0;index < d.length;index++) {
+      if(d[index] && d[index].split(" ").length == 1 && d[index+1] && d[index+1].split(" ").length == 1 && regex.test(d[index]) && regex.test(d[index+1]) && !firstname && !lastname){
+        firstname = d[index];
+        lastname = d[index+1];
+        break;
+      }
+    }
+
+    if(firstname && lastname){
+      let name = firstname + ' ' + lastname;
+      Resume.addKey('name', name);
+    } else {
+      for(let index = 0;index < d.length;index++) {
+        if(regexName.test(d[index])){
+          Resume.addKey('name', d[index]);
+          break;
+        }
+      }
+    }
+  }
 }
 
 /**
